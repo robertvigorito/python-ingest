@@ -1,0 +1,64 @@
+[tool.poetry]
+name = "ingest"
+version = "0.1.0"
+description = ""
+authors = ["robert-v <robertvigorito@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+ffmpeg-python = { git = "https://github.com/kkroening/ffmpeg-python.git" }
+alfred = { path = "../py-alfred", develop = true }
+av = "^11.0.0"
+aiopath = "^0.7.7"
+
+
+[tool.poetry.group.test.dependencies]
+mypy = "^1.11.1"
+ruff = "^0.5.6"
+black = "^24.8.0"
+pylint = "^3.2.6"
+pytest = "^8.3.2"
+tox = "^4.16.0"
+pytest-sugar = "^1.0.0"
+
+
+[tool.poetry.group.types.dependencies]
+types-aiofiles = "^24.1.0.20240626"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+# Testing and devops setup
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = true
+envlist = py310,py311,py312
+
+[testenv]
+allowlist_externals = poetry,echo
+commands =
+    poetry install -v
+    poetry run pylint ./src
+    poetry run pytest
+"""
+
+# Pytest Setup
+[tool.pytest]
+addopts = "-s -rap"
+testpaths = ["tests"]
+
+# Black Setup
+[tool.black]
+line-length = 120
+
+# Pylint Setup
+[tool.pylint]
+max-line-length = 120
+disable = ["too-few-public-methods"]
+
+# Isort Setup
+[tool.isort]
+line_length = 120
+profile = "black"
